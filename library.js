@@ -1,11 +1,14 @@
-function Book(name, author, pages, read, ID) {
-    this.ID = ID;
-    this.name = name;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
-    this.info = function() {
-        return `${name} by ${author}, ${pages} pages, ` + `${read ? "have read it" : "not read yet"}`;
+class Book {
+    constructor(name, author, pages, read, ID) {
+        this.ID = ID;
+        this.name = name;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+    }
+
+    info() {
+        return `${this.name} by ${this.author}, ${this.pages} pages, ` + `${this.read ? "have read it" : "not read yet"}`;
     }
 }
 
