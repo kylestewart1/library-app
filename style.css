@@ -87,3 +87,7 @@ fieldset {
 .delete-book {
     width: 30%;
 }
+
+input:invalid {
+    background-color: rgb(231, 124, 124);
+}

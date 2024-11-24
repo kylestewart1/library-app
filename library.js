@@ -75,11 +75,30 @@ function displayLibrary() {
     })
 }
 
+function checkFormValidity() {
+    if (titleInput.validity.valueMissing ||
+        authorInput.validity.valueMissing ||
+        pagesInput.validity.valueMissing) {
+
+        return false;
+    }
+    
+    if (pagesInput.validity.rangeUnderflow || pagesInput.validity.rangeOverflow) {
+        return false;
+    }
+    console.log("made it");
+    return true;
+}
+
 newBookBtn.addEventListener("click", () => {
     dialog.showModal();
 })
 
 addBookBtn.addEventListener("click", (event) => {
+
+    if (!checkFormValidity()) {
+        return;
+    }
     event.preventDefault();
     addBookToLibrary();
     dialog.close()
