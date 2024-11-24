@@ -1,6 +1,9 @@
 class Book {
-    constructor(name, author, pages, read, ID) {
-        this.ID = ID;
+    static count = 0;
+
+    constructor(name, author, pages, read) {
+        this.ID = Book.count;
+        Book.count++;
         this.name = name;
         this.author = author;
         this.pages = pages;
@@ -12,7 +15,7 @@ class Book {
     }
 }
 
-const library = [];
+const library = {};
 
 const dialog = document.querySelector("dialog");
 const newBookBtn = document.getElementById("new-book-btn");
@@ -33,47 +36,41 @@ let deleteBtns;
 function addBookToLibrary() {
     let haveReadBook = false;
     haveYouReadBookYetBtns.forEach(btn => {
-        console.log(btn.name);
-        console.log(btn.value);
-        console.log(`checked? ${btn.checked}`);
         if (btn.checked) {
-            haveReadBook = btn.value;
+            haveReadBook = Boolean(btn.value);
         }
     })
-    console.log(`Read it? ${haveReadBook}`);
     const book = new Book(titleInput.value,
                           authorInput.value,
                           pagesInput.value,
-                          haveReadBook,
-                          bookID);
-    console.log(book);
-    library.push(book);
-    bookID++;
+                          haveReadBook);
+    library[book.ID] = book;
 }
 
 function createBookDisplay(book) {
     const display = document.createElement("div");
     display.classList.add("book");
-    display.setAttribute("data", book.ID);
+    display.dataset.book = book.ID;
     display.innerHTML = `<p>${book.name}</p>
                          <p>by ${book.author}</p>
                          <p>${book.pages} pages</p>
-                         <p>${book.read == 'true'? "You've read this" : "You haven't read this yet"}</p>
-                         <button class="delete-book">Delete</button>`;
+                         <p>${book.read ? "You've read this" : "You haven't read this yet"}</p>
+                         <button class="delete-book" data-book=${book.ID}>Delete</button>`;
     return display;
 }
 
 
 function displayLibrary() {
     container.innerHTML = "";
-    library.forEach(book => {
+    for (const id in library) {
+        const book = library[id];
         const display = createBookDisplay(book);
         container.appendChild(display);
-    })
+    }
     deleteBtns = document.querySelectorAll(".delete-book");
     deleteBtns.forEach(btn => {
         btn.addEventListener("click", () => {
-            deleteBook(btn.ID);
+            deleteBook(btn.dataset.book);
         })
     })
 }
@@ -90,22 +87,18 @@ addBookBtn.addEventListener("click", (event) => {
 }, false)
 
 function deleteBook(ID) {
-    library.splice(ID, 1);   
-    console.log(library);
+    delete library[ID];
     displayLibrary(); 
 }
 
 
-let bookID = 0;
 
-const theHobbit = new Book("The Hobbit", "J. R. R. Tolkien", 295, true, bookID);
-bookID++;
-const lordOfTheRings = new Book("The Lord of the Rings", "J. R. R. Tolkien", 1137, false, bookID);
-bookID++;
+const theHobbit = new Book("The Hobbit", "J. R. R. Tolkien", 295, true);
+const lordOfTheRings = new Book("The Lord of the Rings", "J. R. R. Tolkien", 1137, false);
 
 
-library.push(theHobbit);
-library.push(lordOfTheRings);
+library[theHobbit.ID] = theHobbit;
+library[lordOfTheRings.ID] = lordOfTheRings;
 
 
 
